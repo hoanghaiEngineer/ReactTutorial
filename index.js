@@ -102,12 +102,18 @@ class MyFormOnSubmit extends React.Component{
 // To update the state in the this.setState method, use square brackets [bracket notation] around the property name.
 // Validating Form Input
 // You can validate form input when the user is typing or you can wait until the form gets submitted.
+
+// Adding Error Message
+// Error messages in alert boxes can be annoying, so let's make an error message that is empty by default, but displays the error when the user inputs anything invalid:
+
 class MyFormMultiFields extends React.Component{
   constructor(props){
     super(props);
     this.state = {
       username: '',
       age: null,
+      errormessage: '',
+      mycar: 'Volvo'
     };
   }
 
@@ -125,19 +131,41 @@ class MyFormMultiFields extends React.Component{
   myChangeHandler = (event) =>{
     let nam = event.target.name;
     let val = event.target.value;
+    let err = '';
+
+    if (nam === "age") {
+      if (val !="" && !Number(val)) {
+        val = null;
+        err = <strong>Your age must be a number</strong>;
+      }
+    }
 
     this.setState({[nam]: val});
+    this.setState({errormessage: err});
   }
 
   render(){
     return(
-      <form>
+      <form onSubmit={this.mySubmitHandler}>
         <h1>Hello {this.state.username} {this.state.age}</h1>
+
+        <select value={this.state.mycar}>
+          <option value='Ford'>Ford</option>
+          <option value='Volvo'>Volvo</option>
+          <option value='Fiat'>Fiat</option>
+        </select>
+
         <p>Enter your name:</p>
         <input type='text' name='username' onChange={this.myChangeHandler} />
 
         <p>Enter your age: </p>
         <input type='text' name='age' onChange={this.myChangeHandler}/>
+        <br></br>
+
+        <input type='submit' />
+        <br></br>
+
+        {this.state.errormessage}
       </form>
     );
   }
